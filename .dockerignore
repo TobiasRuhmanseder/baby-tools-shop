@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+*.db
+*.log
+
+# Virtual environments
+env/
+venv/
+.venv/
+
+# OS / IDE files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile*
+.dockerignore
+
+# Python packaging
+*.egg-info/
+*.egg
+dist/
+build/
+
+# Media / static (collected files)
+staticfiles/
+media/
+
+# Local configs
+*.env
+.env.*
