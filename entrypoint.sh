@@ -29,4 +29,4 @@ else:
 EOF
 
 echo "Starting Gunicorn..."
-exec gunicorn babyshop.wsgi:application --bind 0.0.0.0:8000
+exec python manage.py runserver 0.0.0.0:8000
