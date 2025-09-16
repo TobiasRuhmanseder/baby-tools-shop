@@ -15,7 +15,6 @@ The goal is to achieve the first deployment on a V-Server using Docker. 🐳
 ## PREREQUISITES
 - **Docker** v. 27.5.1
 - **Git**
-- Optional: **Nginx** installed on the Server 
 
 ## QUICKSTART
 Clone repository:
@@ -30,62 +29,26 @@ docker build --no-cache -t babyshop_app  -f Dockerfile .
 Start container:
 ```bash
 docker run -d --name babyshop --restart unless-stopped \
-  -p 127.0.0.1:8000:8000 babyshop_app
+  -p 8025:8000 babyshop_app
 ```
-The app is now reachable at http://127.0.0.1:8000.
+The app is now reachable at http://your_Server_address:8025.
 
 ## USAGE
 
 ### Relevant Files
 
-### ::::Dockerfile::::
-Defines how the image ist built.
-```docker
-FROM python:3.9-alpine
+### Dockerfile
+The Dockerfile builds the container image. It uses Python 3.9-alpine as a base, 
+copies all files into `/app`, installs dependencies from `requirements.txt`, 
+and sets `entrypoint.sh` as the startup script.  
 
-WORKDIR /app
+👉 [View Dockerfile](./Dockerfile)  
 
-COPY . .
+### entrypoint.sh
+The entrypoint script runs database migrations, collects static files, check if an superuser already exist, if not create one, and 
+starts Gunicorn as the WSGI server.  
 
-RUN python -m pip install -r requirements.txt
-
-RUN chmod +x entrypoint.sh
-
-EXPOSE 8000
-
-ENTRYPOINT ["./entrypoint.sh"]
-```
-**Explanation:**
-- Use a small Python-Alpine image
-- Sets working directory to /app
-- Copies project files into the image
-- Install python depencies from requirements.txt
-- Makes entrypoint.sh executable.
-- Automatically starts with entrypoint.sh
- 
-
-### ::::entrypoint.sh::::
-Startup script that runs when the container is launched.
-```bash
-#!/bin/sh
-set -e
-
-echo "Running Django setup..."
-
-python manage.py collectstatic --noinput
-python manage.py makemigrations
-python manage.py migrate
-
-echo "Starting Gunicorn..."
-exec gunicorn babyshop.wsgi:application --bind 0.0.0.0:8000
-```
-**Explanation:**
-- `#!/bin/sh` -> tells the system to use the shell to execute this script
-- `set -e` -> stop the container if any command fails
-- `collectstatic` -> collects all static files into one folder (used by Whitenoise)
-- `makemigrations & migrate` -> applies database migrations automatically
-- Starts Gunicorn as the WSGI server
- 
+👉 [View entrypoint.sh](./entrypoint.sh)
 
 ### Container Commands
 
@@ -103,6 +66,7 @@ docker run -d --name babyshop --restart unless-stopped \
 Show all containers
 ```bash
 docker ps -a
+
 ```
 Show running containers
 ```bash
@@ -137,7 +101,7 @@ docker rmi babyshop_app
 ## ADDITIONAL NOTES
 
 - Gunicorn acts as the WSGI server for Django
-- Using `docker run -p 127.0.0.1:8000:8000` makes the service available only locally
+- Using `docker run -p 8025:8000` makes the service available on port 8025 of the host
 - For external access, Nginx is recommended as a reverse proxy
 - Whitenoise is enabled to serve static files directly via Django/Gunicorn
 
