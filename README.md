@@ -60,7 +60,7 @@ docker build --no-cache -t babyshop_app  -f Dockerfile .
 Start container:
 ```bash
 docker run -d --name babyshop --restart unless-stopped \
-  -p 127.0.0.1:8000:8000 babyshop_app
+  -p 8025:8000 babyshop_app
 ```
 
 Show all containers
