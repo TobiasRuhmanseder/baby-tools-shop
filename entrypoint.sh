@@ -28,5 +28,5 @@ else:
     print(f"Superuser '{username}' already exists.")
 EOF
 
-echo "Starting Gunicorn..."
+echo "Starting Django dev-server"
 exec python manage.py runserver 0.0.0.0:8000
