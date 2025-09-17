@@ -2,7 +2,8 @@
 
 ## DESCRIPTION
 This is a small Django E-Commerce projekt (Baby Tools Shop), that has been containerized as a part of the **DevSecOps education**.
-The container uses **Gunicorn** as the  WSGI server and can optimally be comined with **Nginx** as reverse proxy.
+Currently, the container uses Django’s built-in `runserver` for simplicity (especially to serve media files directly).  
+In a production-ready setup, this would be replaced by **Gunicorn** as the WSGI server, ideally combined with **Nginx** as a reverse proxy.  
 The goal is to achieve the first deployment on a V-Server using Docker. 🐳
 
 ## TABLE OF CONTENTS
@@ -19,7 +20,7 @@ The goal is to achieve the first deployment on a V-Server using Docker. 🐳
 ## QUICKSTART
 Clone repository:
 ```bash
-git clone https://github.com/<DEIN-GITHUB-USER>/<DEIN-REPO>.git
+git clone https://github.com/TobiasRuhmanseder/baby-tools-shop.git
 cd baby-tools-shop
 ```
 Build Docker image:
@@ -31,22 +32,22 @@ Start container:
 docker run -d --name babyshop --restart unless-stopped \
   -p 8025:8000 babyshop_app
 ```
-The app is now reachable at http://your_Server_address:8025.
+The app is now reachable at `http://your_server_address:8025`.
 
 ## USAGE
 
 ### Relevant Files
 
-### Dockerfile
+#### Dockerfile
 The Dockerfile builds the container image. It uses Python 3.9-alpine as a base, 
 copies all files into `/app`, installs dependencies from `requirements.txt`, 
 and sets `entrypoint.sh` as the startup script.  
 
 👉 [View Dockerfile](./Dockerfile)  
 
-### entrypoint.sh
+#### entrypoint.sh
 The entrypoint script runs database migrations, collects static files, check if an superuser already exist, if not create one, and 
-starts Gunicorn as the WSGI server.  
+starts Django’s built-in development server (`runserver`).  
 
 👉 [View entrypoint.sh](./entrypoint.sh)
 
